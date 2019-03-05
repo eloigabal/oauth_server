@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import uuid
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -125,3 +127,6 @@ STATIC_URL = '/static/'
 LOGIN_URL = '/accounts/login/'
 
 OIDC_EXTRA_SCOPE_CLAIMS = 'flexcoop_auth_server.oidc_provider_settings.CustomScopeClaims'
+OIDC_IDTOKEN_INCLUDE_CLAIMS = True
+
+OAUTH_SERVER_UUID = '1a5c9116-3e9f-11e9-8d89-f45c89cdabbf'

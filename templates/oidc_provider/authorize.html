@@ -1,10 +1,14 @@
-{% extends "base.html" %}
-{% block style %}
+<html>
+<head>
     <style>
         @import url(https://fonts.googleapis.com/css?family=Roboto:300);
 
         .login-page {
           width: 360px;
+          padding: 8% 0 0;
+          margin: auto;
+        }
+        .auth-page {
           padding: 8% 0 0;
           margin: auto;
         }
@@ -101,30 +105,31 @@
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
         }
+        .permission {
+            list-style-type: none;
+        }
     </style>
-{% endblock %}
-
-{% block content %}
-    <div class="login-page">
+</head>
+<body>
+    <div class="auth-page">
         <div class="form">
-        {% if form.errors %}
-            <p>Your username and password didn't match. Please try again.</p>
-        {% endif %}
-        <form class="login-form" method="post">
-            {% csrf_token %}
-            <input type="text" name="username" id="id_username" autofocus required placeholder="username"/>
-            <input type="password" name="password" id="id_password" autofocus required placeholder="password"/>
-            <button onclick="submit()">login</button>
-            <p class="message">Not registered? <a href="{% url 'user_management:signup' %}">Create an account</a></p>
-        </form>
+            <h1>Request for Permissions</h1>
+            <p>Client <strong>{{ client.name }}</strong> would like to access this information of you ...</p>
+            <form method="post" action="{% url 'oidc_provider:authorize' %}">
+
+                {% csrf_token %}
+                {{ hidden_inputs }}
+                <ul>
+                    {% for scope in scopes %}
+                    <li class="permission"><strong>{{ scope.name }}: </strong><i>{{ scope.description }}</i></li>
+                    {% endfor %}
+                </ul>
+                <input type="submit" value="Decline" />
+                <input name="allow" type="submit" value="Authorize" />
+            </form>
         </div>
     </div>
-{% endblock %}
+</body>
+</html>
 
-{% block javascript %}
-    <script>
-        $('.message a').click(function(){
-            $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
-        });
-    </script>
-{% endblock %}
+
