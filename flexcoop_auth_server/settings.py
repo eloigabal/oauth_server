@@ -80,8 +80,12 @@ WSGI_APPLICATION = 'flexcoop_auth_server.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'FLEXCoopOauth',
+        'USER': 'flexcoop',
+        'PASSWORD': 'p00cx3lf',
+        'HOST': '217.182.160.171',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
     }
 }
 
