@@ -2,3 +2,4 @@ venv
 .DStore
 .idea
 *.pyc
+config.sh

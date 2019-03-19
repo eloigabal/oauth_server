@@ -22,12 +22,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'qt)=xtn7kp6dyz!znnaq$h%+gpguw^11uho6yt$097*1=g9f17'
+SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -81,11 +81,11 @@ WSGI_APPLICATION = 'flexcoop_auth_server.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'FLEXCoopOauth',
-        'USER': 'flexcoop',
-        'PASSWORD': 'p00cx3lf',
-        'HOST': '217.182.160.171',   # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
+        'NAME': os.environ['DATABASE_NAME'],
+        'USER': os.environ['DATABASE_USER'],
+        'PASSWORD': os.environ['DATABASE_PASSWORD'],
+        'HOST': os.environ['DATABASE_HOST'],   # Or an IP Address that your DB is hosted on
+        'PORT': os.environ['DATABASE_PORT'],
     }
 }
 
@@ -133,4 +133,4 @@ LOGIN_URL = '/accounts/login/'
 OIDC_EXTRA_SCOPE_CLAIMS = 'flexcoop_auth_server.oidc_provider_settings.CustomScopeClaims'
 OIDC_IDTOKEN_INCLUDE_CLAIMS = True
 
-OAUTH_SERVER_UUID = '1a5c9116-3e9f-11e9-8d89-f45c89cdabbf'
+OAUTH_SERVER_UUID = os.environ['OAUTH_SERVER_UUID']
