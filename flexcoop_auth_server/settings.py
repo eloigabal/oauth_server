@@ -134,3 +134,5 @@ OIDC_EXTRA_SCOPE_CLAIMS = 'flexcoop_auth_server.oidc_provider_settings.CustomSco
 OIDC_IDTOKEN_INCLUDE_CLAIMS = True
 
 OAUTH_SERVER_UUID = os.environ['OAUTH_SERVER_UUID']
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
