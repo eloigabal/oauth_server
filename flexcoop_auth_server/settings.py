@@ -138,3 +138,6 @@ OAUTH_SERVER_UUID = os.environ['OAUTH_SERVER_UUID']
 #STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
