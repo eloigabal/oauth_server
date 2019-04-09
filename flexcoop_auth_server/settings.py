@@ -142,6 +142,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+print('DJANGO_LOG_LEVEL (from env)=', os.environ['DJANGO_LOG_LEVEL'])
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -157,3 +159,5 @@ LOGGING = {
         },
     },
 }
+
+
