@@ -14,7 +14,7 @@ class FlexUser(models.Model):
     AGGREGATOR = 'aggregator'
     ROLES=[
         ('prosumer', _('Prosumer')),
-        ('aggragator', _('Agregator'))
+        ('aggregator', _('Aggregator'))
     ]
     user = models.OneToOneField(User, related_name='user_info', on_delete=models.CASCADE)
     anonimizedId = models.CharField(max_length=50)

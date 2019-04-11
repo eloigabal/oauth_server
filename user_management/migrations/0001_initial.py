@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('anonimizedId', models.CharField(max_length=50)),
-                ('role', models.CharField(choices=[('prosumer', 'Prosumer'), ('aggragator', 'Agregator')], max_length=10)),
+                ('role', models.CharField(choices=[('prosumer', 'Prosumer'), ('aggregator', 'Aggregator')], max_length=10)),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='user_info', to=settings.AUTH_USER_MODEL)),
             ],
         ),
