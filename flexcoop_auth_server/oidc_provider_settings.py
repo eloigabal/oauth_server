@@ -32,3 +32,6 @@ class CustomScopeClaims(ScopeClaims):
             'flexId': self.user.user_info.anonimizedId,
         }
         return dic
+
+def uid_sub_token_id(user):
+    return str(user.user_info.anonimizedId)
