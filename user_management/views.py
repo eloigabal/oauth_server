@@ -9,7 +9,7 @@ from user_management.forms import SignUpForm, ProfileForm
 
 # Create your views here.
 from user_management.models import FlexUser
-
+from urllib.parse import urlparse
 
 class SignupView(CreateView):
     model = User
@@ -49,6 +49,8 @@ class ProfileView(FormView):
         params = self.request.GET
         if 'referrer' in params and 'referrer_uri' in params:
             client = Client.objects.get(client_id=params['referrer'])
-            if params['referrer_uri'] in client.redirect_uris:
+            parsed_uri = urlparse(params['referrer_uri'])
+            url = '{uri.scheme}://{uri.netloc}'.format(uri=parsed_uri)
+            if url in client.redirect_uris:
                 return params['referrer_uri']
         return ""
