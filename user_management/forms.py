@@ -30,3 +30,8 @@ class SignUpForm(forms.ModelForm):
         except forms.ValidationError as error:
             self.add_error('password_confirm', error)
 
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']

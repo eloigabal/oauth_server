@@ -107,7 +107,8 @@
 {% block content %}
     <div class="auth-page">
         <div class="form">
-            <h3>User Created! {{ request.user }}</h3>
+            <h3>User Created!</h3>
+            <a href="{% url 'login' %}">Go back to login screen</a>
         </div>
     </div>
 {% endblock %}
