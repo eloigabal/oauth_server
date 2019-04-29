@@ -154,7 +154,9 @@ class AuthorizeEndpoint(object):
                 token = create_token(
                     user=self.request.user,
                     client=self.client,
-                    scope=self.params['scope'])
+                    scope=self.params['scope'],
+                    request=self.request
+                )
 
                 # Check if response_type must include access_token in the response.
                 if (self.params['response_type'] in

@@ -18,6 +18,66 @@ from oidc_provider.models import (
 )
 from oidc_provider import settings
 
+def create_jwt_access_token(token, user, client, nonce='', at_hash='', request=None, scope=None):
+    """
+    Creates the id_token dictionary.
+    See: http://openid.net/specs/openid-connect-core-1_0.html#IDToken
+    Return a dic.
+    """
+    if scope is None:
+        scope = []
+    expires_in = settings.get('OIDC_TOKEN_EXPIRE')
+
+    # Convert datetimes into timestamps.
+    now = int(time.time())
+    iat_time = now
+    exp_time = int(now + expires_in)
+
+    dic = {
+        'iss': get_issuer(request=request),
+        'aud': str(client.client_id),
+        'exp': exp_time,
+        'iat': iat_time,
+    }
+
+    if user is not None:
+        sub = settings.get('OIDC_IDTOKEN_SUB_GENERATOR', import_str=True)(user=user)
+        user_auth_time = user.last_login or user.date_joined
+        auth_time = int(dateformat.format(user_auth_time, 'U'))
+        dic.update(
+            {
+                'sub': sub,
+                'auth_time': auth_time,
+            }
+        )
+        # Inlude (or not) user standard claims in the id_token.
+        if settings.get('OIDC_IDTOKEN_INCLUDE_CLAIMS'):
+            standard_claims = StandardScopeClaims(token)
+            dic.update(standard_claims.create_response_dic())
+            if settings.get('OIDC_EXTRA_SCOPE_CLAIMS'):
+                custom_claims = settings.get('OIDC_EXTRA_SCOPE_CLAIMS', import_str=True)(token)
+                dic.update(custom_claims.create_response_dic())
+        dic = run_processing_hook(
+            dic, 'OIDC_IDTOKEN_PROCESSING_HOOK',
+            user=user, token=token, request=request)
+    else:
+        # TODO: get the sub from client
+        sub = client.name
+        dic.update(
+            {
+                'role': "service",
+                'sub': sub,
+            }
+        )
+
+    if nonce:
+        dic['nonce'] = str(nonce)
+
+    if at_hash:
+        dic['at_hash'] = at_hash
+
+    return encode_id_token(dic, client)
+
 
 def create_id_token(token, user, aud, nonce='', at_hash='', request=None, scope=None):
     """
@@ -101,7 +161,7 @@ def client_id_from_id_token(id_token):
     return aud
 
 
-def create_token(user, client, scope, id_token_dic=None):
+def create_token(user, client, scope, id_token_dic=None, request=None):
     """
     Create and populate a Token object.
     Return a Token object.
@@ -109,7 +169,14 @@ def create_token(user, client, scope, id_token_dic=None):
     token = Token()
     token.user = user
     token.client = client
-    token.access_token = uuid.uuid4().hex
+    token.scope = scope
+    #add token as a jwt instead of uuid
+    #token.access_token = uuid.uuid4().hex
+    nonce = id_token_dic['nonce'] if id_token_dic and 'nonce' in id_token_dic else ''
+    at_hash = id_token_dic['at_hash'] if id_token_dic and 'at_hash' in id_token_dic else ''
+
+    token.access_token = create_jwt_access_token(token, user, client, nonce=nonce, at_hash=at_hash, request=request, scope=scope)
+
 
     if id_token_dic is not None:
         token.id_token = id_token_dic
@@ -117,7 +184,6 @@ def create_token(user, client, scope, id_token_dic=None):
     token.refresh_token = uuid.uuid4().hex
     token.expires_at = timezone.now() + timedelta(
         seconds=settings.get('OIDC_TOKEN_EXPIRE'))
-    token.scope = scope
 
     return token
 

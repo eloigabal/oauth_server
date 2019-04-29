@@ -205,7 +205,7 @@ class Token(BaseCodeTokenModel):
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, verbose_name=_(u'User'), on_delete=models.CASCADE)
-    access_token = models.CharField(max_length=255, unique=True, verbose_name=_(u'Access Token'))
+    access_token = models.CharField(max_length=1000, verbose_name=_(u'Access Token'))
     refresh_token = models.CharField(max_length=255, unique=True, verbose_name=_(u'Refresh Token'))
     _id_token = models.TextField(verbose_name=_(u'ID Token'))
 
