@@ -9,11 +9,13 @@ The server is based on [django_oidc_provider](https://github.com/juanifioren/dja
 ```bash
 virtualenv -p python3 venv
 ```
+
 2. Install requirements
 ```bash
 source venv/bin/activate
 pip install -r requirements.txt
 ```
+
 3. Create the environemnt variables
 ```bash
 export DJANGO_SECRET_KEY=""
@@ -25,17 +27,27 @@ export DATABASE_HOST=""
 export OAUTH_SERVER_UUID=OAUTH_SERVER_UUID=""
 export DJANGO_LOG_LEVEL=""
 ```
+
 4. Collect Statics into `static/` folder
-``` bash
-python manage.py collectstatic --no-input
+```bash
+python3 manage.py collectstatic --no-input
 ```
+
 5. Configure the server to serve the static folder
    
    check the documentation of your server provider to do so.
-   
-3. Run the server
+ 
+6. Create the RSA key
 ```bash
-python manage.py runserver
+python3 manage.py creatersakey
 ```
 
-
+7. Create super user
+```bash
+python3 manage.py createsuperuser
+```
+  
+8. Run the server
+```bash
+python3 manage.py runserver
+```
