@@ -163,3 +163,4 @@ LOGGING = {
 
 OIDC_IDTOKEN_SUB_GENERATOR = 'flexcoop_auth_server.oidc_provider_settings.uid_sub_token_id'
 OIDC_INTROSPECTION_VALIDATE_AUDIENCE_SCOPE = False
+SITE_URL = os.environ['SITE_URL']
