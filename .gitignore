@@ -1,5 +1,6 @@
 venv
 .DStore
+.DS_Store
 .idea
 *.pyc
 config.sh
