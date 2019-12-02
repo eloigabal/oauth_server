@@ -1,0 +1,8 @@
+Your have just registered to Flexcoop for the cooperative {{coop}}
+
+ Following you can find your username and password:
+
+ Username : {{username}}
+ Password: {{password}}
+
+ Thank you.
