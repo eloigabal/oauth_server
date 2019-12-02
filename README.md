@@ -26,6 +26,13 @@ export DATABASE_PORT=
 export DATABASE_HOST=""
 export OAUTH_SERVER_UUID=OAUTH_SERVER_UUID=""
 export DJANGO_LOG_LEVEL=""
+export SITE_URL=""
+export EMAIL_HOST="smtp.gmail.com"
+export EMAIL_USER=""
+export EMAIL_PASSWORD=""
+export EMAIL_PORT="587"
+
+
 ```
 
 4. Collect Statics into `static/` folder

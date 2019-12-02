@@ -1,22 +1,22 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.contrib.auth.password_validation import validate_password
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView, FormView
 
+from oidc_provider.lib.utils.token import client_id_from_id_token
 from oidc_provider.models import Client
 from user_management.forms import SignUpForm, ProfileForm
 
 # Create your views here.
 from user_management.models import FlexUser
-from urllib.parse import urlparse
+from urllib.parse import urlsplit, parse_qs, urlencode, urlunsplit
+
 
 class SignupView(CreateView):
     model = User
     template_name= "registration/signup.html"
     form_class = SignUpForm
     success_url = reverse_lazy('user_management:success')
-
     def form_valid(self, form):
         response = super(SignupView, self).form_valid(form)
         user = form.save(commit=False)
@@ -32,12 +32,12 @@ class SignupView(CreateView):
 class SuccessView(TemplateView):
     template_name = "registration/success.html"
 
-class ProfileView(FormView):
+class ProfileView(LoginRequiredMixin, FormView):
     model = User
     template_name = "registration/profile.html"
     success_url = reverse_lazy('user_management:profile')
     form_class = ProfileForm
-
+    raise_exception = True
     def get_form(self, form_class=ProfileForm):
         return form_class(instance=self.request.user, **self.get_form_kwargs())
 
@@ -46,11 +46,26 @@ class ProfileView(FormView):
         return super(ProfileView, self).form_valid(form)
 
     def get_back_url(self):
-        params = self.request.GET
-        if 'referrer' in params and 'referrer_uri' in params:
-            client = Client.objects.get(client_id=params['referrer'])
-            parsed_uri = urlparse(params['referrer_uri'])
-            url = '{uri.scheme}://{uri.netloc}'.format(uri=parsed_uri)
-            if url in client.redirect_uris:
-                return params['referrer_uri']
+        id_token_hint = self.request.GET.get('id_token_hint', '')
+        return_uri = self.request.GET.get('referrer_uri', '')
+        state = self.request.GET.get('state', '')
+        client_id = None
+
+        if id_token_hint:
+            client_id = client_id_from_id_token(id_token_hint)
+            try:
+                client = Client.objects.get(client_id=client_id)
+                uri = urlsplit(return_uri)
+                t_uri = "{uri.scheme}://{uri.netloc}{uri.path}".format(uri=uri)
+                if t_uri in client.redirect_uris:
+                    query_params = parse_qs(uri.query)
+                    print(query_params)
+                    if state:
+                        query_params['state'] = state
+                        uri = uri._replace(query=urlencode(query_params, doseq=True))
+                        return urlunsplit(uri)
+                    else:
+                        return return_uri
+            except Client.DoesNotExist:
+                pass
         return ""

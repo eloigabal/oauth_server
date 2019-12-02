@@ -164,3 +164,10 @@ LOGGING = {
 OIDC_IDTOKEN_SUB_GENERATOR = 'flexcoop_auth_server.oidc_provider_settings.uid_sub_token_id'
 OIDC_INTROSPECTION_VALIDATE_AUDIENCE_SCOPE = False
 SITE_URL = os.environ['SITE_URL']
+
+EMAIL_HOST = os.environ['EMAIL_HOST']
+EMAIL_HOST_USER = os.environ['EMAIL_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_PASSWORD']
+EMAIL_PORT = os.environ['EMAIL_PORT']
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = os.environ['EMAIL_USER']
