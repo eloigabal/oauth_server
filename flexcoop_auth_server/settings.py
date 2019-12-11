@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -67,6 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'user_management.context_processors.oauth_logo',
             ],
         },
     },
@@ -128,6 +129,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATIC_ROOT = BASE_DIR+'/staticfiles'
+
 LOGIN_URL = '/accounts/login/'
 
 OIDC_EXTRA_SCOPE_CLAIMS = 'flexcoop_auth_server.oidc_provider_settings.CustomScopeClaims'
@@ -135,9 +139,7 @@ OIDC_IDTOKEN_INCLUDE_CLAIMS = True
 
 OAUTH_SERVER_UUID = os.environ['OAUTH_SERVER_UUID']
 
-#STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
-STATIC_ROOT = BASE_DIR+'/staticfiles/'
 
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -171,3 +173,5 @@ EMAIL_HOST_PASSWORD = os.environ['EMAIL_PASSWORD']
 EMAIL_PORT = os.environ['EMAIL_PORT']
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = os.environ['EMAIL_USER']
+
+OAUTH_SERVER_LOGO = os.environ['OAUTH_SERVER_LOGO']

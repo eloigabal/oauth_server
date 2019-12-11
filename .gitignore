@@ -4,4 +4,4 @@ venv
 .idea
 *.pyc
 config.sh
-static
+staticfiles

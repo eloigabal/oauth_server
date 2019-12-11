@@ -1,11 +1,59 @@
  <!DOCTYPE html>
+{% load static %}
 <html>
 <head>
-    {% block style %}{% endblock %}
+	<title>{% block title %}{% endblock %}</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="{% static 'user_views/images/icons/favicon.ico' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'user_views/vendor/bootstrap/css/bootstrap.min.css' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'user_views/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'user_views/fonts/iconic/css/material-design-iconic-font.min.css' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'user_views/vendor/animate/animate.css' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'user_views/vendor/css-hamburgers/hamburgers.min.css' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'user_views/vendor/animsition/css/animsition.min.css' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'user_views/vendor/select2/select2.min.css' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=""{% static 'user_views/vendor/daterangepicker/daterangepicker.css' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'user_views/css/util.css' %}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'user_views/css/main.css' %}"/>
+<!--===============================================================================================-->
+{% block style %}{% endblock %}
 </head>
 <body>
 {% block content %}
 {% endblock %}
+<!--===============================================================================================-->
+	<script src="{% static 'user_views/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'user_views/vendor/animsition/js/animsition.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'user_views/vendor/bootstrap/js/popper.js' %}"></script>
+	<script src="{% static 'user_views/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'user_views/vendor/select2/select2.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'user_views/vendor/daterangepicker/moment.min.js' %}"></script>
+	<script src="{% static 'user_views/vendor/daterangepicker/daterangepicker.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'user_views/vendor/countdowntime/countdowntime.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'user_views/js/main.js' %}"></script>
+
+<script>
+        $('.input100').focus();
+        $('.input100').blur();
+</script>
 {% block javascript %}{% endblock %}
+
 </body>
 </html>

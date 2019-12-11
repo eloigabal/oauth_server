@@ -31,14 +31,15 @@ class SignupView(CreateView):
         profile.get_anonimizedID()
         profile.role = FlexUser.PROSUMER
         profile.save()
-        context = {"coop": settings.SITE_URL, "username": user.username, "password": form.cleaned_data['password']}
-        send_mail(
-            'New user for flexcoop',
-            render_to_string('registration/welcome_user.txt', context),
-            settings.EMAIL_HOST_USER,
-            [user.email],
-            fail_silently=False
-        )
+        # DEACTIVATED UNTIL DECIDED BY THE PROJECT
+#        context = {"coop": settings.SITE_URL, "username": user.username, "password": form.cleaned_data['password']}
+#        send_mail(
+#            'New user for flexcoop',
+#            render_to_string('registration/welcome_user.txt', context),
+#            settings.EMAIL_HOST_USER,
+#            [user.email],
+#            fail_silently=False
+#        )
 
         return response
 
