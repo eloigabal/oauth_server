@@ -24,10 +24,11 @@ export DATABASE_USER=""
 export DATABASE_PASSWORD=""
 export DATABASE_PORT=
 export DATABASE_HOST=""
-export OAUTH_SERVER_UUID=OAUTH_SERVER_UUID=""
+export OAUTH_SERVER_UUID""
 export DJANGO_LOG_LEVEL=""
-export SITE_URL=""
-export EMAIL_HOST="smtp.gmail.com"
+export SITE_URL=""  # The domain/ip where the server is running
+export OAUTH_SERVER_LOGO="" # The statics url of the image logo of the company 
+export EMAIL_HOST=""
 export EMAIL_USER=""
 export EMAIL_PASSWORD=""
 export EMAIL_PORT="587"
