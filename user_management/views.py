@@ -53,18 +53,10 @@ class ProfileView(LoginRequiredMixin, FormView):
     form_class = ProfileForm
     raise_exception = True
     def get_form(self, form_class=ProfileForm):
-        return form_class(instance=self.request.user, **self.get_form_kwargs())
-
-    def form_valid(self, form):
-        form.save()
-        return super(ProfileView, self).form_valid(form)
-
-    def get_back_url(self):
         id_token_hint = self.request.GET.get('id_token_hint', '')
         return_uri = self.request.GET.get('referrer_uri', '')
         state = self.request.GET.get('state', '')
         client_id = None
-
         if id_token_hint:
             client_id = client_id_from_id_token(id_token_hint)
             try:
@@ -77,9 +69,15 @@ class ProfileView(LoginRequiredMixin, FormView):
                     if state:
                         query_params['state'] = state
                         uri = uri._replace(query=urlencode(query_params, doseq=True))
-                        return urlunsplit(uri)
+                        self.request.session['back_url'] = urlunsplit(uri)
                     else:
-                        return return_uri
+                        self.request.session['back_url'] = return_uri
             except Client.DoesNotExist:
-                pass
-        return ""
+                self.request.session['back_url'] = ""
+
+
+        return form_class(instance=self.request.user, **self.get_form_kwargs())
+
+    def form_valid(self, form):
+        form.save()
+        return super(ProfileView, self).form_valid(form)
