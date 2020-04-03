@@ -62,16 +62,20 @@ class ProfileView(LoginRequiredMixin, FormView):
             try:
                 client = Client.objects.get(client_id=client_id)
                 uri = urlsplit(return_uri)
-                t_uri = "{uri.scheme}://{uri.netloc}{uri.path}".format(uri=uri)
-                if t_uri in client.redirect_uris:
-                    query_params = parse_qs(uri.query)
-                    print(query_params)
-                    if state:
-                        query_params['state'] = state
-                        uri = uri._replace(query=urlencode(query_params, doseq=True))
-                        self.request.session['back_url'] = urlunsplit(uri)
-                    else:
-                        self.request.session['back_url'] = return_uri
+                t_uri = "{uri.scheme}://{uri.netloc}".format(uri=uri)
+                for c_uri_reg in client.redirect_uris:
+                    c_uri_obj = urlsplit(c_uri_reg)
+                    c_uri = "{uri.scheme}://{uri.netloc}".format(uri=c_uri_obj)
+                    if t_uri == c_uri:
+                        query_params = parse_qs(uri.query)
+                        print(query_params)
+                        if state:
+                            query_params['state'] = state
+                            uri = uri._replace(query=urlencode(query_params, doseq=True))
+                            self.request.session['back_url'] = urlunsplit(uri)
+                        else:
+                            self.request.session['back_url'] = return_uri
+                        break
             except Client.DoesNotExist:
                 self.request.session['back_url'] = ""
 
