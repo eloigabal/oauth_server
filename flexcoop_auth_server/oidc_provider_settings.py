@@ -45,9 +45,14 @@ def end_session(request, id_token, post_logout_redirect_uri, state, client, next
     # get session from token:
     token_info = decode_id_token(id_token, client)
     if "session_state" in token_info:
-        session = Session.objects.get(session_key=token_info['session_state']).delete()
+        try:
+            session = Session.objects.get(session_key=token_info['session_state']).delete()
+        except:
+            pass
 
 def add_session_id(dic, user, token, request):
-    dic.update({'session_state': request.session.session_key})
+    try:
+        dic.update({'session_state': request.session.session_key})
+    except:
+        pass
     return dic
-
