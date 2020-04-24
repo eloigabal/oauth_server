@@ -152,7 +152,9 @@ class TokenEndpoint(object):
             user=self.code.user,
             client=self.code.client,
             scope=self.code.scope,
-            request=self.request
+            request=self.request,
+            session_state=self.code.session_state
+
         )
 
         if self.code.is_authentication:
@@ -164,6 +166,7 @@ class TokenEndpoint(object):
                 at_hash=token.at_hash,
                 request=self.request,
                 scope=token.scope,
+                session_state=self.code.session_state
             )
         else:
             id_token_dic = {}
@@ -198,7 +201,8 @@ class TokenEndpoint(object):
             user=self.token.user,
             client=self.token.client,
             scope=scope,
-            request=self.request
+            request=self.request,
+            session_state=self.token.session_state
         )
 
         # If the Token has an id_token it's an Authentication request.
@@ -211,6 +215,7 @@ class TokenEndpoint(object):
                 at_hash=token.at_hash,
                 request=self.request,
                 scope=token.scope,
+                session_state=self.token.session_state
             )
         else:
             id_token_dic = {}

@@ -18,7 +18,7 @@ from oidc_provider.models import (
 )
 from oidc_provider import settings
 
-def create_jwt_access_token(token, user, client, nonce='', at_hash='', request=None, scope=None):
+def create_jwt_access_token(token, user, client, nonce='', at_hash='', request=None, scope=None, session_state=None):
     """
     Creates the id_token dictionary.
     See: http://openid.net/specs/openid-connect-core-1_0.html#IDToken
@@ -39,7 +39,8 @@ def create_jwt_access_token(token, user, client, nonce='', at_hash='', request=N
         'exp': exp_time,
         'iat': iat_time,
     }
-
+    if session_state is not None:
+        dic.update({"session_state": session_state})
     if user is not None:
         sub = settings.get('OIDC_IDTOKEN_SUB_GENERATOR', import_str=True)(user=user)
         user_auth_time = user.last_login or user.date_joined
@@ -79,7 +80,7 @@ def create_jwt_access_token(token, user, client, nonce='', at_hash='', request=N
     return encode_id_token(dic, client)
 
 
-def create_id_token(token, user, aud, nonce='', at_hash='', request=None, scope=None):
+def create_id_token(token, user, aud, nonce='', at_hash='', request=None, scope=None, session_state=None):
     """
     Creates the id_token dictionary.
     See: http://openid.net/specs/openid-connect-core-1_0.html#IDToken
@@ -112,6 +113,9 @@ def create_id_token(token, user, aud, nonce='', at_hash='', request=None, scope=
 
     if at_hash:
         dic['at_hash'] = at_hash
+
+    if session_state is not None:
+        dic.update({"session_state": session_state})
 
     # Inlude (or not) user standard claims in the id_token.
     if settings.get('OIDC_IDTOKEN_INCLUDE_CLAIMS'):
@@ -161,7 +165,7 @@ def client_id_from_id_token(id_token):
     return aud
 
 
-def create_token(user, client, scope, id_token_dic=None, request=None):
+def create_token(user, client, scope, id_token_dic=None, request=None, session_state=None):
     """
     Create and populate a Token object.
     Return a Token object.
@@ -170,12 +174,14 @@ def create_token(user, client, scope, id_token_dic=None, request=None):
     token.user = user
     token.client = client
     token.scope = scope
+    if session_state is not None:
+        token.session_state = session_state
     #add token as a jwt instead of uuid
     #token.access_token = uuid.uuid4().hex
     nonce = id_token_dic['nonce'] if id_token_dic and 'nonce' in id_token_dic else ''
     at_hash = id_token_dic['at_hash'] if id_token_dic and 'at_hash' in id_token_dic else ''
 
-    token.access_token = create_jwt_access_token(token, user, client, nonce=nonce, at_hash=at_hash, request=request, scope=scope)
+    token.access_token = create_jwt_access_token(token, user, client, nonce=nonce, at_hash=at_hash, request=request, scope=scope, session_state=session_state)
 
 
     if id_token_dic is not None:
@@ -189,7 +195,7 @@ def create_token(user, client, scope, id_token_dic=None, request=None):
 
 
 def create_code(user, client, scope, nonce, is_authentication,
-                code_challenge=None, code_challenge_method=None):
+                code_challenge=None, code_challenge_method=None, request=None):
     """
     Create and populate a Code object.
     Return a Code object.
@@ -199,7 +205,10 @@ def create_code(user, client, scope, nonce, is_authentication,
     code.client = client
 
     code.code = uuid.uuid4().hex
-
+    try:
+        code.session_state = request.session.session_key
+    except:
+        pass
     if code_challenge and code_challenge_method:
         code.code_challenge = code_challenge
         code.code_challenge_method = code_challenge_method

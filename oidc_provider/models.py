@@ -189,6 +189,7 @@ class Code(BaseCodeTokenModel):
     code = models.CharField(max_length=255, unique=True, verbose_name=_(u'Code'))
     nonce = models.CharField(max_length=255, blank=True, default='', verbose_name=_(u'Nonce'))
     is_authentication = models.BooleanField(default=False, verbose_name=_(u'Is Authentication?'))
+    session_state = models.CharField(max_length=255, null=True, blank=True)
     code_challenge = models.CharField(max_length=255, null=True, verbose_name=_(u'Code Challenge'))
     code_challenge_method = models.CharField(
         max_length=255, null=True, verbose_name=_(u'Code Challenge Method'))
@@ -208,6 +209,7 @@ class Token(BaseCodeTokenModel):
     access_token = models.CharField(max_length=1000, verbose_name=_(u'Access Token'))
     refresh_token = models.CharField(max_length=255, unique=True, verbose_name=_(u'Refresh Token'))
     _id_token = models.TextField(verbose_name=_(u'ID Token'))
+    session_state = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         verbose_name = _(u'Token')
