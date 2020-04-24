@@ -52,7 +52,8 @@ def end_session(request, id_token, post_logout_redirect_uri, state, client, next
 
 def add_session_id(dic, user, token, request):
     try:
-        dic.update({'session_state': request.session.session_key})
+        if "session_state" not in dic:
+            dic.update({'session_state': request.session.session_key})
     except:
         pass
     return dic
