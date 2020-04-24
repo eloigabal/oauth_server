@@ -1,5 +1,9 @@
 from django.utils.translation import ugettext as _
 from oidc_provider.lib.claims import ScopeClaims
+from oidc_provider.lib.utils.token import decode_id_token
+from user_management.models import FlexUser
+from django.contrib.sessions.models import Session
+
 
 class CustomScopeClaims(ScopeClaims):
 
@@ -36,3 +40,14 @@ class CustomScopeClaims(ScopeClaims):
 
 def uid_sub_token_id(user):
     return str(user.user_info.anonimizedId)
+
+def end_session(request, id_token, post_logout_redirect_uri, state, client, next_page):
+    # get session from token:
+    token_info = decode_id_token(id_token, client)
+    if "session_state" in token_info:
+        session = Session.objects.get(session_key=token_info['session_state']).delete()
+
+def add_session_id(dic, user, token, request):
+    dic.update({'session_state': request.session.session_key})
+    return dic
+
