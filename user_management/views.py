@@ -53,32 +53,23 @@ class ProfileView(LoginRequiredMixin, FormView):
     form_class = ProfileForm
     raise_exception = True
     def get_form(self, form_class=ProfileForm):
-        id_token_hint = self.request.GET.get('id_token_hint', '')
         return_uri = self.request.GET.get('referrer_uri', '')
         state = self.request.GET.get('state', '')
-        client_id = None
-        if id_token_hint:
-            client_id = client_id_from_id_token(id_token_hint)
-            try:
-                client = Client.objects.get(client_id=client_id)
-                uri = urlsplit(return_uri)
-                t_uri = "{uri.scheme}://{uri.netloc}".format(uri=uri)
-                for c_uri_reg in client.redirect_uris:
-                    c_uri_obj = urlsplit(c_uri_reg)
-                    c_uri = "{uri.scheme}://{uri.netloc}".format(uri=c_uri_obj)
-                    if t_uri == c_uri:
-                        query_params = parse_qs(uri.query)
-                        print(query_params)
-                        if state:
-                            query_params['state'] = state
-                            uri = uri._replace(query=urlencode(query_params, doseq=True))
-                            self.request.session['back_url'] = urlunsplit(uri)
-                        else:
-                            self.request.session['back_url'] = return_uri
-                        break
-            except Client.DoesNotExist:
-                self.request.session['back_url'] = ""
-
+        uri = urlsplit(return_uri)
+        t_uri = "{uri.scheme}://{uri.netloc}".format(uri=uri)
+        for c_uri_reg in client.redirect_uris:
+        c_uri_obj = urlsplit(c_uri_reg)
+        c_uri = "{uri.scheme}://{uri.netloc}".format(uri=c_uri_obj)
+        if t_uri == c_uri:
+            query_params = parse_qs(uri.query)
+            if state:
+                query_params['state'] = state
+                uri = uri._replace(query=urlencode(query_params, doseq=True))
+                self.request.session['back_url'] = urlunsplit(uri)
+            else:
+                self.request.session['back_url'] = return_uri
+        else:
+            self.request.session['back_url'] = ""
 
         return form_class(instance=self.request.user, **self.get_form_kwargs())
 
