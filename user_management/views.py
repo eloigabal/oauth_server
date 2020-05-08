@@ -53,12 +53,19 @@ class ProfileView(LoginRequiredMixin, FormView):
     form_class = ProfileForm
     raise_exception = True
     def get_form(self, form_class=ProfileForm):
+        print("******************")
+        print(self.request.session['back_url'])
+        print("******************")
+
         return_uri = self.request.GET.get('referrer_uri', '')
         state = self.request.GET.get('state', '')
         uri = urlsplit(return_uri)
-        t_uri = "{uri.scheme}://{uri.netloc}".format(uri=uri)
         query_params = parse_qs(uri.query)
+        print("__________________")
+        print(return_uri)
+        print(uri)
         print(query_params)
+        print("__________________")
         if return_uri:
             if state:
                 query_params['state'] = state
