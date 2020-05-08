@@ -59,12 +59,13 @@ class ProfileView(LoginRequiredMixin, FormView):
         t_uri = "{uri.scheme}://{uri.netloc}".format(uri=uri)
         query_params = parse_qs(uri.query)
         print(query_params)
-        if state:
-            query_params['state'] = state
-            uri = uri._replace(query=urlencode(query_params, doseq=True))
-            self.request.session['back_url'] = urlunsplit(uri)
-        else:
-            self.request.session['back_url'] = return_uri
+        if return_uri:
+            if state:
+                query_params['state'] = state
+                uri = uri._replace(query=urlencode(query_params, doseq=True))
+                self.request.session['back_url'] = urlunsplit(uri)
+            else:
+                self.request.session['back_url'] = return_uri
 
         return form_class(instance=self.request.user, **self.get_form_kwargs())
 
